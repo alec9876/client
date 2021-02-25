@@ -1,0 +1,65 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/">FirePit</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <ng-container *ngIf="accountService.currentUser$ | async">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/members" routerLinkActive="active">People</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/friends" routerLinkActive="active">Friends</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/beverages" routerLinkActive="active">Beverages</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/meetings" routerLinkActive="active">Meetings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/quotebook" routerLinkActive="active">QuoteBook</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/messages" routerLinkActive="active">Messages</a>
+          </li>
+          <li *appHasRole='["Admin", "Moderator"]' class="nav-item">
+            <a class="nav-link" routerLink="/admin" routerLinkActive="active">Admin</a>
+          </li>
+        </ng-container>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/errors" routerLinkActive="active">Errors</a>
+        </li>
+      </ul>
+
+      <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
+        <img src="{{user.photoUrl || './assets/user.png'}}" alt="user.userName">
+        <a class="dropdown-toggle text-light ml-2" dropdownToggle>Welcome {{user.knownAs || user.userName}}</a>
+        <div class="dropdown-menu mt-3" *dropdownMenu>
+          <a routerLink='/member/edit' class="dropdown-item">Edit Profile</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="logout()">Logout</a>
+        </div>
+      </div>
+
+      <form *ngIf="(accountService.currentUser$ | async) === null" #loginForm="ngForm" class="form-inline ml-auto mt-2 mt-md-0" (ngSubmit)="login()" autocomplete="off">
+        <input
+          name="Username"
+          [(ngModel)]="model.Username"
+          class="form-control mr-sm-2"
+          type="text"
+          placeholder="Username">
+          <input
+          name="Password"
+          [(ngModel)]="model.Password"
+          class="form-control mr-sm-2"
+          type="password"
+          placeholder="Password">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+</nav>
